@@ -1,0 +1,225 @@
+{
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workbookDisplayName": {
+      "type": "string",
+      "defaultValue": "The Great Sample",
+      "metadata": {
+        "description": "The friendly name for the workbook that is used in the Gallery or Saved List.  This name must be unique within a resource group."
+      }
+    },
+    "workbookType": {
+      "type": "string",
+      "defaultValue": "sentinel",
+      "metadata": {
+        "description": "The gallery that the workbook will been shown under. Supported values include workbook, tsg, etc. Usually, this is 'workbook'"
+      }
+    },
+    "workbookSourceId": {
+      "type": "string",
+      "defaultValue": "/subscriptions/d1023ce7-d3eb-4947-bd94-d907df33bdd8/resourcegroups/default-rg/providers/microsoft.operationalinsights/workspaces/datastore",
+      "metadata": {
+        "description": "The id of resource instance to which the workbook will be associated"
+      }
+    },
+    "workbookId": {
+      "type": "string",
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "The unique guid for this workbook instance"
+      }
+    }
+  },
+  "variables": {
+    "workbookContent": {
+      "version": "Notebook/1.0",
+      "items": [
+        {
+          "type": 1,
+          "content": {
+            "json": "## The Great Sample of MIllion Dollar Home Page\n---\n\nWelcome to the workbook for providing some insights on million dollar home"
+          },
+          "name": "text - 2"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string)\n[\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\n]\nwith(format=\"csv\")\n| extend ['response code'] = iff(['response code']== 200, '🆗 Working', ' 🔥 Not Working')\n|summarize count() by ['response code']\n\n",
+            "size": 1,
+            "title": "Active Summary",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "visualization": "tiles",
+            "gridSettings": {
+              "formatters": [
+                {
+                  "columnMatch": "id",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "link",
+                  "formatter": 7
+                }
+              ],
+              "rowLimit": 10000,
+              "filter": true
+            },
+            "tileSettings": {
+              "showBorder": false,
+              "titleContent": {
+                "columnMatch": "response code",
+                "formatter": 1
+              },
+              "leftContent": {
+                "columnMatch": "count_",
+                "formatter": 12,
+                "formatOptions": {
+                  "palette": "auto"
+                },
+                "numberFormat": {
+                  "unit": 17,
+                  "options": {
+                    "maximumSignificantDigits": 3,
+                    "maximumFractionDigits": 2
+                  }
+                }
+              }
+            }
+          },
+          "customWidth": "30",
+          "name": "query - 2 - Copy"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string)\n[\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\n]\nwith(format=\"csv\")\n|summarize count() by ['content-type']\n\n",
+            "size": 1,
+            "title": "Content Types",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "visualization": "barchart",
+            "gridSettings": {
+              "formatters": [
+                {
+                  "columnMatch": "id",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "link",
+                  "formatter": 7
+                }
+              ],
+              "rowLimit": 10000,
+              "filter": true
+            },
+            "tileSettings": {
+              "showBorder": false,
+              "titleContent": {
+                "columnMatch": "response code",
+                "formatter": 1
+              },
+              "leftContent": {
+                "columnMatch": "count_",
+                "formatter": 12,
+                "formatOptions": {
+                  "palette": "auto"
+                },
+                "numberFormat": {
+                  "unit": 17,
+                  "options": {
+                    "maximumSignificantDigits": 3,
+                    "maximumFractionDigits": 2
+                  }
+                }
+              }
+            }
+          },
+          "customWidth": "70",
+          "name": "query - 2 - Copy - Copy"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string, ['Found Date']:string)\r\n[\r\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\r\n]\r\nwith(format=\"csv\")\r\n| project link , ['Found Date']",
+            "size": 2,
+            "title": "Last Found ",
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "gridSettings": {
+              "formatters": [
+                {
+                  "columnMatch": "Found Date",
+                  "formatter": 1
+                }
+              ],
+              "rowLimit": 10000,
+              "filter": true
+            }
+          },
+          "name": "query - 4"
+        },
+        {
+          "type": 3,
+          "content": {
+            "version": "KqlItem/1.0",
+            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string, ['Found Date']:string)\n[\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\n]\nwith(format=\"csv\")\n| extend ['response code'] = iff(['response code'] == 200, strcat('😀 ', ['response code']), strcat('😡 ', ['response code']))\n| project-away filename\n",
+            "size": 2,
+            "title": "URL Details",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "gridSettings": {
+              "formatters": [
+                {
+                  "columnMatch": "id",
+                  "formatter": 5
+                },
+                {
+                  "columnMatch": "link",
+                  "formatter": 7
+                }
+              ],
+              "rowLimit": 10000,
+              "filter": true
+            }
+          },
+          "name": "query - 2"
+        }
+      ],
+      "isLocked": false,
+      "fallbackResourceIds": [
+        "/subscriptions/d1023ce7-d3eb-4947-bd94-d907df33bdd8/resourcegroups/default-rg/providers/microsoft.operationalinsights/workspaces/datastore"
+      ],
+      "fromTemplateId": "sentinel-UserWorkbook"
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('workbookId')]",
+      "type": "microsoft.insights/workbooks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2021-03-08",
+      "dependsOn": [],
+      "kind": "shared",
+      "properties": {
+        "displayName": "[parameters('workbookDisplayName')]",
+        "serializedData": "[string(variables('workbookContent'))]",
+        "version": "1.0",
+        "sourceId": "[parameters('workbookSourceId')]",
+        "category": "[parameters('workbookType')]"
+      }
+    }
+  ],
+  "outputs": {
+    "workbookId": {
+      "type": "string",
+      "value": "[resourceId( 'microsoft.insights/workbooks', parameters('workbookId'))]"
+    }
+  },
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+}
