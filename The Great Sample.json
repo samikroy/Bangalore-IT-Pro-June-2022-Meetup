@@ -42,10 +42,32 @@
           "name": "text - 2"
         },
         {
+          "type": 9,
+          "content": {
+            "version": "KqlParameterItem/1.0",
+            "parameters": [
+              {
+                "id": "bb7a591a-2094-4706-bfa6-234d068d533d",
+                "version": "KqlParameterItem/1.0",
+                "name": "BaseQuery",
+                "type": 1,
+                "value": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string, ['Found Date']:string) [   \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\" ] with(format=\"csv\")",
+                "timeContext": {
+                  "durationMs": 86400000
+                }
+              }
+            ],
+            "style": "pills",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          },
+          "name": "parameters - 5"
+        },
+        {
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string)\n[\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\n]\nwith(format=\"csv\")\n| extend ['response code'] = iff(['response code']== 200, '🆗 Working', ' 🔥 Not Working')\n|summarize count() by ['response code']\n\n",
+            "query": "{BaseQuery}\n| extend ['response code'] = iff(['response code']== 200, '🆗 Working', ' 🔥 Not Working')\n|summarize count() by ['response code']\n\n",
             "size": 1,
             "title": "Active Summary",
             "queryType": 0,
@@ -94,7 +116,7 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string)\n[\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\n]\nwith(format=\"csv\")\n|summarize count() by ['content-type']\n\n",
+            "query": "{BaseQuery}\n|summarize count() by ['content-type']\n\n",
             "size": 1,
             "title": "Content Types",
             "queryType": 0,
@@ -143,7 +165,7 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string, ['Found Date']:string)\r\n[\r\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\r\n]\r\nwith(format=\"csv\")\r\n| project link , ['Found Date']",
+            "query": "{BaseQuery}\r\n| project link , ['Found Date']",
             "size": 2,
             "title": "Last Found ",
             "timeContext": {
@@ -168,7 +190,7 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "externaldata(id:string, filename:string,link:string, ['response code']:string, title:string, ['content-type']:string, ['screen shot']:string, archived:string, ['internet archive response code']:string, ['internet archive response text']:string, ['wayback earliest date']:string, ['Found Date']:string)\n[\n  \"https://raw.githubusercontent.com/ross-spencer/million-dollar-webpage/master/million-dollar-analysis-ia-links.csv\"\n]\nwith(format=\"csv\")\n| extend ['response code'] = iff(['response code'] == 200, strcat('😀 ', ['response code']), strcat('😡 ', ['response code']))\n| project-away filename\n",
+            "query": "{BaseQuery}\n| extend ['response code'] = iff(['response code'] == 200, strcat('😀 ', ['response code']), strcat('😡 ', ['response code']))\n| project-away filename\n",
             "size": 2,
             "title": "URL Details",
             "queryType": 0,
