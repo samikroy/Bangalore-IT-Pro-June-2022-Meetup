@@ -1,0 +1,434 @@
+{
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workbookDisplayName": {
+      "type": "string",
+      "defaultValue": "My Azure Workbook",
+      "metadata": {
+        "description": "The friendly name for the workbook that is used in the Gallery or Saved List.  This name must be unique within a resource group."
+      }
+    },
+    "workbookType": {
+      "type": "string",
+      "defaultValue": "sentinel",
+      "metadata": {
+        "description": "The gallery that the workbook will been shown under. Supported values include workbook, tsg, etc. Usually, this is 'workbook'"
+      }
+    },
+    "workbookSourceId": {
+      "type": "string",
+      "defaultValue": "/subscriptions/d1023ce7-d3eb-4947-bd94-d907df33bdd8/resourcegroups/default-rg/providers/microsoft.operationalinsights/workspaces/datastore",
+      "metadata": {
+        "description": "The id of resource instance to which the workbook will be associated"
+      }
+    },
+    "workbookId": {
+      "type": "string",
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "The unique guid for this workbook instance"
+      }
+    }
+  },
+  "variables": {
+    "workbookContent": {
+      "version": "Notebook/1.0",
+      "items": [
+        {
+          "type": 1,
+          "content": {
+            "json": "# Introduction\n\nThis workbook takes you though different features of a workbook"
+          },
+          "name": "text - 2"
+        },
+        {
+          "type": 11,
+          "content": {
+            "version": "LinkItem/1.0",
+            "style": "tabs",
+            "links": [
+              {
+                "id": "1386f23d-fe05-4373-8a43-22b2b5679dfe",
+                "cellValue": "selectedTab",
+                "linkTarget": "parameter",
+                "linkLabel": "AzureResourceGraph",
+                "subTarget": "AzureResourceGraph",
+                "style": "link"
+              },
+              {
+                "id": "17affb93-db4e-4357-87e2-09786067c5f0",
+                "cellValue": "selectedTab",
+                "linkTarget": "parameter",
+                "linkLabel": "LogAnalytics",
+                "subTarget": "LogAnalytics",
+                "style": "link"
+              },
+              {
+                "id": "bfa69575-fae0-4582-be5d-764d1e38a3c6",
+                "cellValue": "selectedTab",
+                "linkTarget": "parameter",
+                "linkLabel": "OutsideAzure",
+                "subTarget": "OutsideAzure",
+                "style": "link"
+              },
+              {
+                "id": "0b1b6a92-200f-4015-baca-460b47b1c604",
+                "cellValue": "selectedTab",
+                "linkTarget": "parameter",
+                "linkLabel": "SigninLogs",
+                "subTarget": "SigninLogs",
+                "style": "link"
+              }
+            ]
+          },
+          "name": "links - 5"
+        },
+        {
+          "type": 12,
+          "content": {
+            "version": "NotebookGroup/1.0",
+            "groupType": "editable",
+            "items": [
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "resources\r\n| summarize count() by type",
+                  "size": 1,
+                  "title": "Types of Azure Resources",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "visualization": "piechart",
+                  "chartSettings": {
+                    "showMetrics": false,
+                    "showLegend": true
+                  }
+                },
+                "customWidth": "30",
+                "name": "query - 2"
+              },
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "resources\r\n| summarize count() by location",
+                  "size": 1,
+                  "title": "Resources by Location ",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "visualization": "piechart",
+                  "chartSettings": {
+                    "showMetrics": false,
+                    "showLegend": true
+                  }
+                },
+                "customWidth": "30",
+                "name": "query - 2 - Copy"
+              },
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "resources",
+                  "size": 1,
+                  "title": "Resource Group View",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "visualization": "table",
+                  "gridSettings": {
+                    "hierarchySettings": {
+                      "treeType": 1,
+                      "groupBy": [
+                        "resourceGroup"
+                      ],
+                      "expandTopLevel": true
+                    }
+                  },
+                  "chartSettings": {
+                    "showMetrics": false,
+                    "showLegend": true
+                  }
+                },
+                "name": "query - 2 - Copy - Copy"
+              }
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectedTab",
+            "comparison": "isEqualTo",
+            "value": "AzureResourceGraph"
+          },
+          "name": "AzureResourceGraph"
+        },
+        {
+          "type": 12,
+          "content": {
+            "version": "NotebookGroup/1.0",
+            "groupType": "editable",
+            "items": [
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "SigninLogs\r\n| summarize count() by UserPrincipalName",
+                  "size": 0,
+                  "title": "User SignInCount",
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces",
+                  "visualization": "barchart"
+                },
+                "name": "query - 0"
+              },
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "SigninLogs\r\n| summarize FailedCount = countif(ResultType !=0), SuccessCount = countif(ResultType ==0),TotalCount= count() by UserPrincipalName",
+                  "size": 0,
+                  "title": "User SignInCount",
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces",
+                  "visualization": "categoricalbar"
+                },
+                "name": "query - 0 - Copy"
+              },
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "SigninLogs\r\n| extend Latitude = tostring(parse_json(tostring(LocationDetails.geoCoordinates)).latitude)\r\n| extend Longitude = tostring(parse_json(tostring(LocationDetails.geoCoordinates)).longitude)",
+                  "size": 0,
+                  "title": "Sign In on Maps",
+                  "timeContext": {
+                    "durationMs": 172800000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces",
+                  "visualization": "map",
+                  "mapSettings": {
+                    "locInfo": "CountryRegion",
+                    "locInfoColumn": "Location",
+                    "latitude": "Location",
+                    "longitude": "Latitude",
+                    "sizeAggregation": "Sum",
+                    "defaultSize": 10,
+                    "labelSettings": "Location",
+                    "legendMetric": "DurationMs",
+                    "legendAggregation": "Average",
+                    "itemColorSettings": {
+                      "nodeColorField": "DurationMs",
+                      "colorAggregation": "Min",
+                      "type": "heatmap",
+                      "heatmapPalette": "greenRed"
+                    }
+                  }
+                },
+                "name": "query - 2"
+              },
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "SigninLogs\r\n| summarize count(), FailedCount = countif(ResultType !=0),SuccessCount = countif(ResultType !=0) by UserPrincipalName, bin(TimeGenerated, 30m)",
+                  "size": 0,
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces",
+                  "visualization": "timechart"
+                },
+                "name": "query - 5"
+              }
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectedTab",
+            "comparison": "isEqualTo",
+            "value": "LogAnalytics"
+          },
+          "name": "LogAnalytics"
+        },
+        {
+          "type": 12,
+          "content": {
+            "version": "NotebookGroup/1.0",
+            "groupType": "editable",
+            "items": [
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "externaldata(ip_prefix: string)\r\n[ \r\n   h@'https://www.gstatic.com/ipranges/cloud.json'\r\n]\r\nwith(format='multijson', ingestionMapping='[{\"Column\":\"ip_prefix\",\"Properties\":{\"Path\":\"$.prefixes\"}},{\"Column\":\"ipv4Prefix\",\"Properties\":{\"Path\":\"$.prefixes.ipv4Prefix\"}}]')\r\n| mv-expand todynamic(ip_prefix)\r\n| extend [\"IP4 Address\"] = tostring(ip_prefix.ipv4Prefix)\r\n| extend [\"Location\"] = tostring(ip_prefix.scope)\r\n| project-away ip_prefix",
+                  "size": 0,
+                  "title": "Google Cloud Service IP Ranges",
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                "name": "query - 0"
+              },
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "{\"version\":\"CustomEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"url\":\"https://gorest.co.in/public/v2/users\",\"contentType\":\"text/plain\",\"urlParams\":[],\"transformers\":null}",
+                  "size": 0,
+                  "queryType": 10,
+                  "gridSettings": {
+                    "formatters": [
+                      {
+                        "columnMatch": "status",
+                        "formatter": 18,
+                        "formatOptions": {
+                          "thresholdsOptions": "icons",
+                          "thresholdsGrid": [
+                            {
+                              "operator": "==",
+                              "thresholdValue": "active",
+                              "representation": "success",
+                              "text": "{0}{1}"
+                            },
+                            {
+                              "operator": "==",
+                              "thresholdValue": "inactive",
+                              "representation": "failed",
+                              "text": "{0}{1}"
+                            },
+                            {
+                              "operator": "Default",
+                              "thresholdValue": null,
+                              "representation": "1",
+                              "text": "{0}{1}"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "name": "query - 6"
+              }
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectedTab",
+            "comparison": "isEqualTo",
+            "value": "OutsideAzure"
+          },
+          "name": "OutsideAzure"
+        },
+        {
+          "type": 12,
+          "content": {
+            "version": "NotebookGroup/1.0",
+            "groupType": "editable",
+            "items": [
+              {
+                "type": 3,
+                "content": {
+                  "version": "KqlItem/1.0",
+                  "query": "let AllSLs = (SigninLogs| where UserPrincipalName contains \"@thesecurityninjas.com\");\r\nlet SLSummary= (\r\nAllSLs\r\n| summarize ['Total Signins']= count(), \r\n['Failed Sign ins']= countif(ResultType !=0),\r\n['Successful Sign ins']= countif(ResultType ==0)\r\n by UserPrincipalName);\r\n let SLTrend = ( AllSLs\r\n | extend LoginSuccess = iff(ResultType !=0, 0,1)\r\n |summarize  makelist(LoginSuccess) by UserPrincipalName);\r\nSLSummary\r\n| join kind =inner \r\n(SLTrend)\r\non $left.UserPrincipalName == $right.UserPrincipalName",
+                  "size": 0,
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces",
+                  "gridSettings": {
+                    "formatters": [
+                      {
+                        "columnMatch": "Total Signins",
+                        "formatter": 8,
+                        "formatOptions": {
+                          "palette": "blue"
+                        }
+                      },
+                      {
+                        "columnMatch": "Failed Sign ins",
+                        "formatter": 18,
+                        "formatOptions": {
+                          "thresholdsOptions": "icons",
+                          "thresholdsGrid": [
+                            {
+                              "operator": ">",
+                              "representation": "3",
+                              "text": "{0}{1}"
+                            },
+                            {
+                              "operator": "==",
+                              "thresholdValue": "0",
+                              "representation": "success",
+                              "text": "{0}{1}"
+                            },
+                            {
+                              "operator": "Default",
+                              "thresholdValue": null,
+                              "representation": "success",
+                              "text": "{0}{1}"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "columnMatch": "list_LoginSuccess",
+                        "formatter": 10,
+                        "formatOptions": {
+                          "palette": "blue"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "name": "query - 0"
+              }
+            ]
+          },
+          "conditionalVisibility": {
+            "parameterName": "selectedTab",
+            "comparison": "isEqualTo",
+            "value": "SigninLogs"
+          },
+          "name": "group - 5"
+        }
+      ],
+      "isLocked": false,
+      "fallbackResourceIds": [
+        "/subscriptions/d1023ce7-d3eb-4947-bd94-d907df33bdd8/resourcegroups/default-rg/providers/microsoft.operationalinsights/workspaces/datastore"
+      ],
+      "fromTemplateId": "sentinel-UserWorkbook"
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('workbookId')]",
+      "type": "microsoft.insights/workbooks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2021-03-08",
+      "dependsOn": [],
+      "kind": "shared",
+      "properties": {
+        "displayName": "[parameters('workbookDisplayName')]",
+        "serializedData": "[string(variables('workbookContent'))]",
+        "version": "1.0",
+        "sourceId": "[parameters('workbookSourceId')]",
+        "category": "[parameters('workbookType')]"
+      }
+    }
+  ],
+  "outputs": {
+    "workbookId": {
+      "type": "string",
+      "value": "[resourceId( 'microsoft.insights/workbooks', parameters('workbookId'))]"
+    }
+  },
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+}
