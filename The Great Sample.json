@@ -214,9 +214,7 @@
         }
       ],
       "isLocked": false,
-      "fallbackResourceIds": [
-        "/subscriptions/d1023ce7-d3eb-4947-bd94-d907df33bdd8/resourcegroups/default-rg/providers/microsoft.operationalinsights/workspaces/datastore"
-      ],
+      "fallbackResourceIds": [],
       "fromTemplateId": "sentinel-UserWorkbook"
     }
   },
